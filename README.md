@@ -1,84 +1,68 @@
-# 🔐 RSA Encryption Demo in C++
+# 🔐 RSA Encryption Demos in C++ and C (with OpenSSL)
 
-This repository contains a simple and illustrative implementation of **RSA public-key encryption** in C++. It demonstrates key generation, encryption, decryption, and message recovery using modular arithmetic — designed to help understand how RSA works in practice.
+This repository showcases two implementations of **RSA public-key cryptography**:
+- One written in **standard C++**
+- One using **OpenSSL's BIGNUM library in C**
 
----
-
-## 📦 Files
-
-- `rsa.cpp`: Full RSA implementation with a demonstration of secure encryption using `(m + k)^e mod n` and parity-based decryption.
-- (Optional Context) Sample AVP-related notes in comments: The Additive Veto Protocol is referenced as a potential use-case for integrating RSA for secure vote handling.
+Both demonstrate how RSA works at a low level — from key generation to encryption and decryption — with a focus on using random masking and parity recovery for single-bit messages.
 
 ---
 
-## 🧠 How It Works
+## 📂 Files
 
-This implementation simulates the following RSA operations:
-
-1. **Key Generation**
-   - Chooses two small primes `p` and `q`
-   - Computes `n = p * q` and `φ(n) = (p - 1)(q - 1)`
-   - Chooses public exponent `e` such that `gcd(e, φ) = 1`
-   - Computes private key `d` as the modular inverse of `e mod φ(n)`
-
-2. **Message Encryption**
-   - A random even number `k` is added to the original message bit `m ∈ {0,1}`
-   - Ciphertext is computed as:  
-     \[
-     c = (m + k)^e \mod n
-     \]
-
-3. **Message Decryption**
-   - Decrypted value:  
-     \[
-     (m + k)^d \mod n
-     \]
-   - The original bit `m` is recovered using parity: `decrypted % 2`
+- `rsa.cpp`: A pure C++ RSA implementation using native types and modular arithmetic.
+- `rsaopenssl.c`: A C implementation using OpenSSL's BIGNUM API for secure big integer operations.
 
 ---
 
-# 🔐 RSA Encryption in C using OpenSSL
+## 📖 What is RSA?
 
-This repository contains a compact RSA implementation in C using the **OpenSSL BIGNUM library**. It demonstrates how to:
-
-- Generate RSA keys with large random primes
-- Perform encryption of a masked single-bit message using exponentiation
-- Decrypt and recover the original bit using parity
-
-This is a practical extension of textbook RSA using real cryptographic libraries.
+RSA is a widely used public-key encryption algorithm that relies on the difficulty of factoring large integers. It enables secure communication, digital signatures, and more. RSA involves:
+- Generating a pair of keys (public and private)
+- Encrypting a message using the public key
+- Decrypting it using the private key
 
 ---
 
-## 📄 File: `rsaopenssl.c`
+## 🧠 Implementation Details
 
-### 🧠 What It Demonstrates
+### ✅ Common Idea
 
-- RSA key generation using `BN_generate_prime_ex`
-- Modular arithmetic via OpenSSL's `BIGNUM` API
-- Random bit message + random even masking
-- RSA encryption:  
-  \[
-  c = (m + k)^e \mod n
-  \]
-- Decryption and message recovery via:  
-  \[
-  m = (c^d \mod n) \mod 2
-  \]
+Both implementations encrypt a single-bit message `m ∈ {0,1}` using a **random even mask** `k`, then recover `m` via **parity** after decryption.
 
----
+Encryption:
+\[
+c = (m + k)^e \mod n
+\]
 
+Decryption:
+\[
+m = (c^d \mod n) \mod 2
+\]
 
 ---
 
-## ⚙️ How to Build and Run
+## 🚀 `rsa.cpp`: C++ Native RSA Implementation
 
-### 🧰 Requirements
+### 🔍 Description
 
-- OpenSSL development libraries (libssl-dev)
-- GCC or Clang
+- Uses small hardcoded primes `p = 37`, `q = 53` for simplicity.
+- Modular arithmetic is done manually using 64-bit integers.
+- Demonstrates RSA key generation, encryption, and decryption.
+- Includes:
+  - GCD calculation
+  - Modular exponentiation
+  - Modular inverse via Extended Euclidean Algorithm
 
-### 🛠️ Build
+### 🧪 Example Behavior
 
 ```bash
-gcc rsaopenssl.c -o rsaopenssl -lcrypto
-
+p: 37
+q: 53
+Public Key (e, n): (17, 1961)
+Private Key (d, n): (113, 1961)
+Original message (m): 1
+Random even k: 1700
+Ciphertext: 949
+Decrypted value (m + k): 1701
+Recovered message bit (m): 1
