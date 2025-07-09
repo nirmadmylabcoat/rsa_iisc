@@ -36,3 +36,49 @@ This implementation simulates the following RSA operations:
    - The original bit `m` is recovered using parity: `decrypted % 2`
 
 ---
+
+# 🔐 RSA Encryption in C using OpenSSL
+
+This repository contains a compact RSA implementation in C using the **OpenSSL BIGNUM library**. It demonstrates how to:
+
+- Generate RSA keys with large random primes
+- Perform encryption of a masked single-bit message using exponentiation
+- Decrypt and recover the original bit using parity
+
+This is a practical extension of textbook RSA using real cryptographic libraries.
+
+---
+
+## 📄 File: `rsaopenssl.c`
+
+### 🧠 What It Demonstrates
+
+- RSA key generation using `BN_generate_prime_ex`
+- Modular arithmetic via OpenSSL's `BIGNUM` API
+- Random bit message + random even masking
+- RSA encryption:  
+  \[
+  c = (m + k)^e \mod n
+  \]
+- Decryption and message recovery via:  
+  \[
+  m = (c^d \mod n) \mod 2
+  \]
+
+---
+
+
+---
+
+## ⚙️ How to Build and Run
+
+### 🧰 Requirements
+
+- OpenSSL development libraries (libssl-dev)
+- GCC or Clang
+
+### 🛠️ Build
+
+```bash
+gcc rsaopenssl.c -o rsaopenssl -lcrypto
+
